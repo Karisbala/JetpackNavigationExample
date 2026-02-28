@@ -3,11 +3,12 @@ package com.example.jetpacknavigationexample.ui.details
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.jetpacknavigationexample.R
 import com.example.jetpacknavigationexample.databinding.FragmentProductDetailsBinding
 import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
-import com.example.jetpacknavigationexample.ui.common.requireAppNavigator
+import com.example.jetpacknavigationexample.ui.common.navigateUpOrBackPress
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -61,13 +62,16 @@ class ProductDetailsFragment :
 
     private fun handleEffect(effect: ProductDetailsEffect) {
         when (effect) {
-            ProductDetailsEffect.NavigateBack -> requireAppNavigator().navigateBack()
+            ProductDetailsEffect.NavigateBack -> navigateUpOrBackPress()
             is ProductDetailsEffect.Navigate -> {
                 when (effect.destination) {
-                    ProductDetailsDestination.PRODUCT_ONBOARDING ->
-                        requireAppNavigator().openProductOnboarding()
+                    ProductDetailsDestination.PRODUCT_ONBOARDING -> findNavController().navigate(
+                        R.id.action_productDetailsFragment_to_productOnboardingFragment
+                    )
 
-                    ProductDetailsDestination.PRODUCT -> requireAppNavigator().openProduct()
+                    ProductDetailsDestination.PRODUCT -> findNavController().navigate(
+                        R.id.action_productDetailsFragment_to_productFragment
+                    )
                 }
             }
         }

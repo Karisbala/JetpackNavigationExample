@@ -1,23 +1,19 @@
 package com.example.jetpacknavigationexample
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.NavHostFragment
 import com.example.jetpacknavigationexample.databinding.ActivityProductBinding
-import com.example.jetpacknavigationexample.navigation.AppNavigator
 import com.example.jetpacknavigationexample.navigation.ProductAppLink
-import com.example.jetpacknavigationexample.ui.details.ProductDetailsFragment
-import com.example.jetpacknavigationexample.ui.onboarding.ProductOnboardingFragment
-import com.example.jetpacknavigationexample.ui.product.ProductFragment
+import com.example.jetpacknavigationexample.ui.product.PRODUCT_ARG_SHOULD_MARK_VISIT
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductActivity : AppCompatActivity(), AppNavigator {
+class ProductActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProductBinding
 
@@ -34,72 +30,21 @@ class ProductActivity : AppCompatActivity(), AppNavigator {
         }
 
         if (savedInstanceState == null) {
-            openInitialScreen()
+            openProductFromAppLinkIfNeeded()
         }
     }
 
-    override fun openProductOnboarding() {
-        replaceFragment(
-            fragment = ProductOnboardingFragment(),
-            addToBackStack = true,
-            backStackName = PRODUCT_ONBOARDING_BACK_STACK
-        )
-    }
-
-    override fun openProduct() {
-        supportFragmentManager.popBackStackImmediate(
-            PRODUCT_ONBOARDING_BACK_STACK,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-
-        replaceFragment(
-            fragment = ProductFragment.newInstance(),
-            addToBackStack = true,
-            backStackName = PRODUCT_BACK_STACK
-        )
-    }
-
-    override fun navigateBack() {
-        onBackPressedDispatcher.onBackPressed()
-    }
-
-    private fun replaceFragment(
-        fragment: Fragment,
-        addToBackStack: Boolean,
-        backStackName: String? = null
-    ) {
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
-            if (addToBackStack) {
-                addToBackStack(backStackName)
-            }
+    private fun openProductFromAppLinkIfNeeded() {
+        if (!ProductAppLink.matches(intent)) {
+            return
         }
-    }
 
-    private fun openInitialScreen() {
-        if (ProductAppLink.matches(intent)) {
-            setRootFragment(ProductDetailsFragment())
-            replaceFragment(
-                fragment = ProductFragment.newInstance(shouldMarkProductVisit = false),
-                addToBackStack = true,
-                backStackName = PRODUCT_BACK_STACK
-            )
-        } else {
-            setRootFragment(ProductDetailsFragment())
-        }
-    }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.productNavHostFragment) as NavHostFragment
 
-    private fun setRootFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .setReorderingAllowed(true)
-            .replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
-            .commitNow()
-    }
-
-    private companion object {
-        private const val PRODUCT_ONBOARDING_BACK_STACK = "product_onboarding_back_stack"
-        private const val PRODUCT_BACK_STACK = "product_back_stack"
+        navHostFragment.navController.navigate(
+            R.id.action_productDetailsFragment_to_productFragment,
+            bundleOf(PRODUCT_ARG_SHOULD_MARK_VISIT to false)
+        )
     }
 }

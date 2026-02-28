@@ -3,10 +3,12 @@ package com.example.jetpacknavigationexample.ui.onboarding
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.jetpacknavigationexample.R
 import com.example.jetpacknavigationexample.databinding.FragmentProductOnboardingBinding
 import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
-import com.example.jetpacknavigationexample.ui.common.requireAppNavigator
+import com.example.jetpacknavigationexample.ui.common.navigateUpOrBackPress
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,8 +44,10 @@ class ProductOnboardingFragment :
 
     private fun handleEffect(effect: ProductOnboardingEffect) {
         when (effect) {
-            ProductOnboardingEffect.NavigateBack -> requireAppNavigator().navigateBack()
-            ProductOnboardingEffect.NavigateToProduct -> requireAppNavigator().openProduct()
+            ProductOnboardingEffect.NavigateBack -> navigateUpOrBackPress()
+            ProductOnboardingEffect.NavigateToProduct -> findNavController().navigate(
+                R.id.action_productOnboardingFragment_to_productFragment
+            )
         }
     }
 }

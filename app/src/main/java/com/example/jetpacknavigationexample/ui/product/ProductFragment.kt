@@ -34,7 +34,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.jetpacknavigationexample.R
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
-import com.example.jetpacknavigationexample.ui.common.requireAppNavigator
+import com.example.jetpacknavigationexample.ui.common.navigateUpOrBackPress
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,17 +68,7 @@ class ProductFragment : Fragment() {
 
     private fun handleEffect(effect: ProductEffect) {
         when (effect) {
-            ProductEffect.NavigateBack -> requireAppNavigator().navigateBack()
-        }
-    }
-
-    companion object {
-        fun newInstance(shouldMarkProductVisit: Boolean = true): ProductFragment {
-            return ProductFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(PRODUCT_ARG_SHOULD_MARK_VISIT, shouldMarkProductVisit)
-                }
-            }
+            ProductEffect.NavigateBack -> navigateUpOrBackPress()
         }
     }
 }

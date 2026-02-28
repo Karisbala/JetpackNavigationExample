@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/productNavGraph"
+    app:startDestination="@id/productDetailsFragment">
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.jetpacknavigationexample.ui.details.ProductDetailsFragment">
+        <action
+            android:id="@+id/action_productDetailsFragment_to_productOnboardingFragment"
+            app:destination="@id/productOnboardingFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_productFragment"
+            app:destination="@id/productFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productOnboardingFragment"
+        android:name="com.example.jetpacknavigationexample.ui.onboarding.ProductOnboardingFragment">
+        <action
+            android:id="@+id/action_productOnboardingFragment_to_productFragment"
+            app:destination="@id/productFragment"
+            app:popUpTo="@id/productOnboardingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.jetpacknavigationexample.ui.product.ProductFragment">
+        <argument
+            android:name="product_arg_should_mark_visit"
+            app:argType="boolean"
+            android:defaultValue="true" />
+    </fragment>
+
+</navigation>

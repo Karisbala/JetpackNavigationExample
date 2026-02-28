@@ -4,7 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import com.example.jetpacknavigationexample.ProductActivity
+import androidx.navigation.fragment.findNavController
+import com.example.jetpacknavigationexample.R
 import com.example.jetpacknavigationexample.databinding.FragmentWelcomeBinding
 import com.example.jetpacknavigationexample.navigation.ProductAppLink
 import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
@@ -46,7 +47,7 @@ class WelcomeFragment :
     private fun handleEffect(effect: WelcomeEffect) {
         when (effect) {
             WelcomeEffect.OpenProductFlow -> {
-                startActivity(Intent(requireContext(), ProductActivity::class.java))
+                findNavController().navigate(R.id.action_welcomeFragment_to_productActivity)
             }
 
             WelcomeEffect.OpenProductFlowByAppLink -> {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/welcomeNavGraph"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.jetpacknavigationexample.ui.welcome.WelcomeFragment">
+        <action
+            android:id="@+id/action_welcomeFragment_to_productActivity"
+            app:destination="@id/productActivityDestination" />
+    </fragment>
+
+    <activity
+        android:id="@+id/productActivityDestination"
+        android:name="com.example.jetpacknavigationexample.ProductActivity" />
+
+</navigation>
