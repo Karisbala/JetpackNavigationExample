@@ -1,5 +1,6 @@
 package com.example.jetpacknavigationexample.ui.product
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.jetpacknavigationexample.domain.usecase.CalculateLeastCommonMultipleUseCase
 import com.example.jetpacknavigationexample.domain.usecase.MarkProductVisitedUseCase
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.update
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val calculateLeastCommonMultiple: CalculateLeastCommonMultipleUseCase,
     markProductVisited: MarkProductVisitedUseCase
 ) : ViewModel() {
@@ -24,7 +26,10 @@ class ProductViewModel @Inject constructor(
     val effects = _effects.asSharedFlow()
 
     init {
-        markProductVisited()
+        val shouldMarkProductVisit = savedStateHandle[PRODUCT_ARG_SHOULD_MARK_VISIT] ?: true
+        if (shouldMarkProductVisit) {
+            markProductVisited()
+        }
     }
 
     fun onAction(action: ProductAction) {

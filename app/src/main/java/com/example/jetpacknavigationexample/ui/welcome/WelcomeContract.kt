@@ -6,8 +6,10 @@ data class WelcomeUiState(
 
 sealed interface WelcomeAction {
     object NextClicked : WelcomeAction
+    object OpenProductAppLinkClicked : WelcomeAction
 }
 
 sealed interface WelcomeEffect {
     object OpenProductFlow : WelcomeEffect
+    object OpenProductFlowByAppLink : WelcomeEffect
 }

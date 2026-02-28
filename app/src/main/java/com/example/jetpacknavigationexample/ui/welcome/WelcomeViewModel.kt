@@ -20,6 +20,8 @@ class WelcomeViewModel @Inject constructor() : ViewModel() {
     fun onAction(action: WelcomeAction) {
         when (action) {
             WelcomeAction.NextClicked -> _effects.tryEmit(WelcomeEffect.OpenProductFlow)
+            WelcomeAction.OpenProductAppLinkClicked ->
+                _effects.tryEmit(WelcomeEffect.OpenProductFlowByAppLink)
         }
     }
 }

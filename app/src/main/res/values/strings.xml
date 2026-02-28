@@ -9,6 +9,7 @@
     <string name="product_details_point_three_countdown">Onboarding returns in %1$s. Until then, the next tap skips onboarding.</string>
     <string name="product_onboarding_message">Just type the numbers and the app will show the least common multiple for you.</string>
     <string name="action_next">Next</string>
+    <string name="action_open_product_by_app_link">Open Product by App Link</string>
     <string name="action_back">Back</string>
     <string name="action_calculate">Calculate LCM</string>
     <string name="title_welcome">Welcome</string>

@@ -1,5 +1,7 @@
 package com.example.jetpacknavigationexample.ui.product
 
+const val PRODUCT_ARG_SHOULD_MARK_VISIT = "product_arg_should_mark_visit"
+
 data class ProductInputFieldState(
     val value: String = "",
     val error: ProductInputError? = null

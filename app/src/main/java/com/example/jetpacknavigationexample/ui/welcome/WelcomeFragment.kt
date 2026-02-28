@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.jetpacknavigationexample.ProductActivity
 import com.example.jetpacknavigationexample.databinding.FragmentWelcomeBinding
+import com.example.jetpacknavigationexample.navigation.ProductAppLink
 import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,10 @@ class WelcomeFragment :
         binding.buttonNext.setOnClickListener {
             viewModel.onAction(WelcomeAction.NextClicked)
         }
+
+        binding.buttonOpenProductByAppLink.setOnClickListener {
+            viewModel.onAction(WelcomeAction.OpenProductAppLinkClicked)
+        }
     }
 
     private fun observeViewModel() {
@@ -35,12 +40,20 @@ class WelcomeFragment :
 
     private fun render(uiState: WelcomeUiState) {
         binding.buttonNext.isEnabled = uiState.isNextEnabled
+        binding.buttonOpenProductByAppLink.isEnabled = uiState.isNextEnabled
     }
 
     private fun handleEffect(effect: WelcomeEffect) {
         when (effect) {
             WelcomeEffect.OpenProductFlow -> {
                 startActivity(Intent(requireContext(), ProductActivity::class.java))
+            }
+
+            WelcomeEffect.OpenProductFlowByAppLink -> {
+                val appLinkIntent = Intent(Intent.ACTION_VIEW, ProductAppLink.uri).apply {
+                    setPackage(requireContext().packageName)
+                }
+                startActivity(appLinkIntent)
             }
         }
     }

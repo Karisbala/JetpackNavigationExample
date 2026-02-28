@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.example.jetpacknavigationexample.databinding.ActivityProductBinding
 import com.example.jetpacknavigationexample.navigation.AppNavigator
+import com.example.jetpacknavigationexample.navigation.ProductAppLink
 import com.example.jetpacknavigationexample.ui.details.ProductDetailsFragment
 import com.example.jetpacknavigationexample.ui.onboarding.ProductOnboardingFragment
 import com.example.jetpacknavigationexample.ui.product.ProductFragment
@@ -33,10 +34,7 @@ class ProductActivity : AppCompatActivity(), AppNavigator {
         }
 
         if (savedInstanceState == null) {
-            replaceFragment(
-                fragment = ProductDetailsFragment(),
-                addToBackStack = false
-            )
+            openInitialScreen()
         }
     }
 
@@ -55,7 +53,7 @@ class ProductActivity : AppCompatActivity(), AppNavigator {
         )
 
         replaceFragment(
-            fragment = ProductFragment(),
+            fragment = ProductFragment.newInstance(),
             addToBackStack = true,
             backStackName = PRODUCT_BACK_STACK
         )
@@ -77,6 +75,27 @@ class ProductActivity : AppCompatActivity(), AppNavigator {
                 addToBackStack(backStackName)
             }
         }
+    }
+
+    private fun openInitialScreen() {
+        if (ProductAppLink.matches(intent)) {
+            setRootFragment(ProductDetailsFragment())
+            replaceFragment(
+                fragment = ProductFragment.newInstance(shouldMarkProductVisit = false),
+                addToBackStack = true,
+                backStackName = PRODUCT_BACK_STACK
+            )
+        } else {
+            setRootFragment(ProductDetailsFragment())
+        }
+    }
+
+    private fun setRootFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
+            .commitNow()
     }
 
     private companion object {

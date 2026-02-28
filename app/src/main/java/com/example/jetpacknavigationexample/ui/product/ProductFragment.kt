@@ -85,4 +85,14 @@ class ProductFragment :
 
         return getString(stringRes)
     }
+
+    companion object {
+        fun newInstance(shouldMarkProductVisit: Boolean = true): ProductFragment {
+            return ProductFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(PRODUCT_ARG_SHOULD_MARK_VISIT, shouldMarkProductVisit)
+                }
+            }
+        }
+    }
 }
