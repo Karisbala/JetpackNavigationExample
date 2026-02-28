@@ -27,6 +27,7 @@ class ProductDetailsViewModel @Inject constructor(
 
     fun onAction(action: ProductDetailsAction) {
         when (action) {
+            ProductDetailsAction.BackClicked -> _effects.tryEmit(ProductDetailsEffect.NavigateBack)
             ProductDetailsAction.ScreenResumed -> refreshShortcutAvailability()
             ProductDetailsAction.NextClicked -> emitNavigationEffect()
         }

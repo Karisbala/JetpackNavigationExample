@@ -6,10 +6,12 @@ data class ProductDetailsUiState(
 
 sealed interface ProductDetailsAction {
     object ScreenResumed : ProductDetailsAction
+    object BackClicked : ProductDetailsAction
     object NextClicked : ProductDetailsAction
 }
 
 sealed interface ProductDetailsEffect {
+    object NavigateBack : ProductDetailsEffect
     data class Navigate(val destination: ProductDetailsDestination) : ProductDetailsEffect
 }
 

@@ -28,6 +28,10 @@ class ProductDetailsFragment :
     }
 
     private fun setupListeners() {
+        binding.buttonBack.setOnClickListener {
+            viewModel.onAction(ProductDetailsAction.BackClicked)
+        }
+
         binding.buttonNext.setOnClickListener {
             viewModel.onAction(ProductDetailsAction.NextClicked)
         }
@@ -50,6 +54,7 @@ class ProductDetailsFragment :
 
     private fun handleEffect(effect: ProductDetailsEffect) {
         when (effect) {
+            ProductDetailsEffect.NavigateBack -> requireAppNavigator().navigateBack()
             is ProductDetailsEffect.Navigate -> {
                 when (effect.destination) {
                     ProductDetailsDestination.PRODUCT_ONBOARDING ->

@@ -11,6 +11,8 @@
     <string name="action_next">Next</string>
     <string name="action_back">Back</string>
     <string name="action_calculate">Calculate LCM</string>
+    <string name="title_welcome">Welcome</string>
+    <string name="welcome_message">Welcome to the LCM navigator. Start here to open the product flow and learn how the calculator works.</string>
     <string name="hint_first_number">First number</string>
     <string name="hint_second_number">Second number</string>
     <string name="product_result">LCM: %1$s</string>

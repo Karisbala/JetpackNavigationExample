@@ -1,0 +1,47 @@
+package com.example.jetpacknavigationexample.ui.welcome
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.viewModels
+import com.example.jetpacknavigationexample.ProductActivity
+import com.example.jetpacknavigationexample.databinding.FragmentWelcomeBinding
+import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
+import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class WelcomeFragment :
+    ViewBindingFragment<FragmentWelcomeBinding>(FragmentWelcomeBinding::inflate) {
+
+    private val viewModel by viewModels<WelcomeViewModel>()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupListeners()
+        observeViewModel()
+    }
+
+    private fun setupListeners() {
+        binding.buttonContinue.setOnClickListener {
+            viewModel.onAction(WelcomeAction.NextClicked)
+        }
+    }
+
+    private fun observeViewModel() {
+        collectLatestLifecycleFlow(viewModel.uiState, ::render)
+        collectLatestLifecycleFlow(viewModel.effects, ::handleEffect)
+    }
+
+    private fun render(uiState: WelcomeUiState) {
+        binding.buttonContinue.isEnabled = uiState.isNextEnabled
+    }
+
+    private fun handleEffect(effect: WelcomeEffect) {
+        when (effect) {
+            WelcomeEffect.OpenProductFlow -> {
+                startActivity(Intent(requireContext(), ProductActivity::class.java))
+            }
+        }
+    }
+}
