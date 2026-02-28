@@ -23,7 +23,7 @@ class WelcomeFragment :
     }
 
     private fun setupListeners() {
-        binding.buttonContinue.setOnClickListener {
+        binding.buttonNext.setOnClickListener {
             viewModel.onAction(WelcomeAction.NextClicked)
         }
     }
@@ -34,7 +34,7 @@ class WelcomeFragment :
     }
 
     private fun render(uiState: WelcomeUiState) {
-        binding.buttonContinue.isEnabled = uiState.isNextEnabled
+        binding.buttonNext.isEnabled = uiState.isNextEnabled
     }
 
     private fun handleEffect(effect: WelcomeEffect) {

@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import com.example.jetpacknavigationexample.databinding.ActivityMainBinding
+import com.example.jetpacknavigationexample.databinding.ActivityProductBinding
 import com.example.jetpacknavigationexample.navigation.AppNavigator
 import com.example.jetpacknavigationexample.ui.details.ProductDetailsFragment
 import com.example.jetpacknavigationexample.ui.onboarding.ProductOnboardingFragment
@@ -18,12 +18,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProductActivity : AppCompatActivity(), AppNavigator {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityProductBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
@@ -72,7 +72,7 @@ class ProductActivity : AppCompatActivity(), AppNavigator {
     ) {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.fragmentContainer, fragment, fragment::class.java.simpleName)
+            replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
             if (addToBackStack) {
                 addToBackStack(backStackName)
             }

@@ -28,7 +28,7 @@
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonContinue"
+            android:id="@+id/buttonNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
