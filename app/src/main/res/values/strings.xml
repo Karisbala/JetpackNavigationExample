@@ -6,7 +6,7 @@
     <string name="product_details_point_one">This flow explains how the feature helps users find the least common multiple of two numbers.</string>
     <string name="product_details_point_two">On the last screen, type two positive whole numbers and tap the button to calculate the LCM.</string>
     <string name="product_details_point_three_default">The onboarding screen appears before the calculator when the one-minute shortcut is inactive.</string>
-    <string name="product_details_point_three_shortcut">Because the calculator was visited recently, the next tap skips onboarding for one minute.</string>
+    <string name="product_details_point_three_countdown">Onboarding returns in %1$s. Until then, the next tap skips onboarding.</string>
     <string name="product_onboarding_message">Just type the numbers and the app will show the least common multiple for you.</string>
     <string name="action_next">Next</string>
     <string name="action_back">Back</string>

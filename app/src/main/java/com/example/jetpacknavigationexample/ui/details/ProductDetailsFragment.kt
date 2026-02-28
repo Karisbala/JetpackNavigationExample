@@ -9,6 +9,7 @@ import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
 import com.example.jetpacknavigationexample.ui.common.requireAppNavigator
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class ProductDetailsFragment :
@@ -27,6 +28,11 @@ class ProductDetailsFragment :
         viewModel.onAction(ProductDetailsAction.ScreenResumed)
     }
 
+    override fun onStop() {
+        viewModel.onAction(ProductDetailsAction.ScreenStopped)
+        super.onStop()
+    }
+
     private fun setupListeners() {
         binding.buttonBack.setOnClickListener {
             viewModel.onAction(ProductDetailsAction.BackClicked)
@@ -43,13 +49,14 @@ class ProductDetailsFragment :
     }
 
     private fun render(uiState: ProductDetailsUiState) {
-        val messageRes = if (uiState.isShortcutAvailable) {
-            R.string.product_details_point_three_shortcut
+        if (uiState.isShortcutAvailable) {
+            binding.textDetailThree.text = getString(
+                R.string.product_details_point_three_countdown,
+                uiState.shortcutRemainingSeconds.toCountdownText()
+            )
         } else {
-            R.string.product_details_point_three_default
+            binding.textDetailThree.setText(R.string.product_details_point_three_default)
         }
-
-        binding.textDetailThree.setText(messageRes)
     }
 
     private fun handleEffect(effect: ProductDetailsEffect) {
@@ -64,5 +71,11 @@ class ProductDetailsFragment :
                 }
             }
         }
+    }
+
+    private fun Long.toCountdownText(): String {
+        val minutes = this / 60L
+        val seconds = this % 60L
+        return String.format(Locale.getDefault(), "%d:%02d", minutes, seconds)
     }
 }

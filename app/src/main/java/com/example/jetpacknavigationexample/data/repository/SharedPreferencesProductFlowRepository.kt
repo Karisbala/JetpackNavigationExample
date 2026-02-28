@@ -10,14 +10,19 @@ class SharedPreferencesProductFlowRepository @Inject constructor(
     private val timeProvider: TimeProvider
 ) : ProductFlowRepository {
 
-    override fun isProductShortcutAvailable(): Boolean {
+    override fun getProductShortcutRemainingMillis(): Long {
         val lastVisitedAt = sharedPreferences.getLong(KEY_LAST_PRODUCT_VISIT, NO_VISIT_RECORDED)
         if (lastVisitedAt == NO_VISIT_RECORDED) {
-            return false
+            return 0L
         }
 
-        val elapsedTime = timeProvider.currentTimeMillis() - lastVisitedAt
-        return elapsedTime in 0..SHORTCUT_WINDOW_IN_MILLIS
+        val expirationTime = lastVisitedAt + SHORTCUT_WINDOW_IN_MILLIS
+        val remainingTime = expirationTime - timeProvider.currentTimeMillis()
+        return remainingTime.coerceIn(0L, SHORTCUT_WINDOW_IN_MILLIS)
+    }
+
+    override fun isProductShortcutAvailable(): Boolean {
+        return getProductShortcutRemainingMillis() > 0L
     }
 
     override fun markProductScreenVisited() {
