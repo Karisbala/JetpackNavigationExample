@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">LCM Navigator</string>
+    <string name="title_product_details">Product Details</string>
+    <string name="title_product_onboarding">Product Onboarding</string>
+    <string name="title_product">Product</string>
+    <string name="product_details_point_one">This flow explains how the feature helps users find the least common multiple of two numbers.</string>
+    <string name="product_details_point_two">On the last screen, type two positive whole numbers and tap the button to calculate the LCM.</string>
+    <string name="product_details_point_three_default">The onboarding screen appears before the calculator when the one-minute shortcut is inactive.</string>
+    <string name="product_details_point_three_shortcut">Because the calculator was visited recently, the next tap skips onboarding for one minute.</string>
+    <string name="product_onboarding_message">Just type the numbers and the app will show the least common multiple for you.</string>
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_calculate">Calculate LCM</string>
+    <string name="hint_first_number">First number</string>
+    <string name="hint_second_number">Second number</string>
+    <string name="product_result">LCM: %1$s</string>
+    <string name="sample_result">LCM: 12</string>
+    <string name="error_invalid_number">Enter a positive whole number.</string>
+    <string name="error_numbers_too_large">Use smaller numbers.</string>
+</resources>
