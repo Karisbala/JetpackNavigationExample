@@ -1,105 +1,73 @@
 package com.example.jetpacknavigationexample
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
-import com.example.jetpacknavigationexample.databinding.ActivityProductBinding
+import com.example.jetpacknavigationexample.navigation.AppNavigation3Controller
+import com.example.jetpacknavigationexample.navigation.AppNavigation3Host
 import com.example.jetpacknavigationexample.navigation.AppNavigator
 import com.example.jetpacknavigationexample.navigation.ProductAppLink
-import com.example.jetpacknavigationexample.ui.details.ProductDetailsFragment
-import com.example.jetpacknavigationexample.ui.onboarding.ProductOnboardingFragment
-import com.example.jetpacknavigationexample.ui.product.ProductFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProductActivity : AppCompatActivity(), AppNavigator {
 
-    private lateinit var binding: ActivityProductBinding
+    private lateinit var navigationController: AppNavigation3Controller
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityProductBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        navigationController = AppNavigation3Controller.create(
+            savedTokens = savedInstanceState?.getStringArrayList(KEY_NAVIGATION_STACK)
+        )
+
+        if (savedInstanceState == null && ProductAppLink.matches(intent)) {
+            navigationController.openProductFlowByAppLink()
         }
 
-        if (savedInstanceState == null) {
-            openInitialScreen()
+        setContent {
+            AppNavigation3Host(
+                fragmentManager = supportFragmentManager,
+                backStack = navigationController.backStack,
+                onBack = ::handleBackNavigation
+            )
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(KEY_NAVIGATION_STACK, navigationController.saveState())
+    }
+
+    override fun openProductFlow() {
+        navigationController.openProductFlow()
+    }
+
+    override fun openProductFlowByAppLink() {
+        navigationController.openProductFlowByAppLink()
     }
 
     override fun openProductOnboarding() {
-        replaceFragment(
-            fragment = ProductOnboardingFragment(),
-            addToBackStack = true,
-            backStackName = PRODUCT_ONBOARDING_BACK_STACK
-        )
+        navigationController.openProductOnboarding()
     }
 
     override fun openProduct() {
-        supportFragmentManager.popBackStackImmediate(
-            PRODUCT_ONBOARDING_BACK_STACK,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
-
-        replaceFragment(
-            fragment = ProductFragment.newInstance(),
-            addToBackStack = true,
-            backStackName = PRODUCT_BACK_STACK
-        )
+        navigationController.openProduct()
     }
 
     override fun navigateBack() {
-        onBackPressedDispatcher.onBackPressed()
+        handleBackNavigation()
     }
 
-    private fun replaceFragment(
-        fragment: Fragment,
-        addToBackStack: Boolean,
-        backStackName: String? = null
-    ) {
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
-            if (addToBackStack) {
-                addToBackStack(backStackName)
-            }
+    private fun handleBackNavigation() {
+        if (!navigationController.navigateBack()) {
+            finish()
         }
-    }
-
-    private fun openInitialScreen() {
-        if (ProductAppLink.matches(intent)) {
-            setRootFragment(ProductDetailsFragment())
-            replaceFragment(
-                fragment = ProductFragment.newInstance(shouldMarkProductVisit = false),
-                addToBackStack = true,
-                backStackName = PRODUCT_BACK_STACK
-            )
-        } else {
-            setRootFragment(ProductDetailsFragment())
-        }
-    }
-
-    private fun setRootFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .setReorderingAllowed(true)
-            .replace(R.id.productFragmentContainer, fragment, fragment::class.java.simpleName)
-            .commitNow()
     }
 
     private companion object {
-        private const val PRODUCT_ONBOARDING_BACK_STACK = "product_onboarding_back_stack"
-        private const val PRODUCT_BACK_STACK = "product_back_stack"
+        private const val KEY_NAVIGATION_STACK = "key_navigation_stack"
     }
 }

@@ -12,18 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JetpackNavigationExample">
         <activity
-            android:name=".MainActivity"
-            android:theme="@android:style/Theme.NoDisplay"
+            android:name=".ProductActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ProductActivity"
-            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -36,9 +31,6 @@
                     android:path="/product" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".WelcomeActivity"
-            android:exported="false" />
     </application>
 
 </manifest>
