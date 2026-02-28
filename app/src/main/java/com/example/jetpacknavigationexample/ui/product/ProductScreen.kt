@@ -1,9 +1,5 @@
 package com.example.jetpacknavigationexample.ui.product
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,79 +16,32 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jetpacknavigationexample.R
-import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
-import com.example.jetpacknavigationexample.ui.common.requireAppNavigator
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class ProductFragment : Fragment() {
-
-    private val viewModel by viewModels<ProductViewModel>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                MaterialTheme {
-                    ProductRoute(viewModel = viewModel)
-                }
-            }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeEffects()
-    }
-
-    private fun observeEffects() {
-        collectLatestLifecycleFlow(viewModel.effects, ::handleEffect)
-    }
-
-    private fun handleEffect(effect: ProductEffect) {
-        when (effect) {
-            ProductEffect.NavigateBack -> requireAppNavigator().navigateBack()
-        }
-    }
-
-    companion object {
-        fun newInstance(shouldMarkProductVisit: Boolean = true): ProductFragment {
-            return ProductFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(PRODUCT_ARG_SHOULD_MARK_VISIT, shouldMarkProductVisit)
-                }
-            }
-        }
-    }
-}
-
-private fun ProductInputError.toErrorMessageRes(): Int {
-    return when (this) {
-        ProductInputError.INVALID_NUMBER -> R.string.error_invalid_number
-        ProductInputError.TOO_LARGE -> R.string.error_numbers_too_large
-    }
-}
 
 @Composable
-private fun ProductRoute(viewModel: ProductViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+fun ProductRoute(
+    onNavigateBack: () -> Unit,
+    viewModel: ProductViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                ProductEffect.NavigateBack -> onNavigateBack()
+            }
+        }
+    }
 
     ProductScreen(
         uiState = uiState,
@@ -196,7 +145,10 @@ private fun ProductScreen(
             )
         } else {
             Button(
-                onClick = onCalculateClicked,
+                onClick = {
+                    focusManager.clearFocus()
+                    onCalculateClicked()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)
@@ -213,5 +165,12 @@ private fun ProductScreen(
         ) {
             Text(text = stringResource(R.string.action_back))
         }
+    }
+}
+
+private fun ProductInputError.toErrorMessageRes(): Int {
+    return when (this) {
+        ProductInputError.INVALID_NUMBER -> R.string.error_invalid_number
+        ProductInputError.TOO_LARGE -> R.string.error_numbers_too_large
     }
 }

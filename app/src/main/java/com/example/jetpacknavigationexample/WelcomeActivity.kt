@@ -1,28 +1,48 @@
 package com.example.jetpacknavigationexample
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.jetpacknavigationexample.databinding.ActivityWelcomeBinding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.ui.Modifier
+import com.example.jetpacknavigationexample.navigation.ProductAppLink
+import com.example.jetpacknavigationexample.ui.theme.JetpackNavigationExampleTheme
+import com.example.jetpacknavigationexample.ui.welcome.WelcomeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WelcomeActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityWelcomeBinding
+class WelcomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContent {
+            JetpackNavigationExampleTheme {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.safeDrawing)
+                ) {
+                    WelcomeRoute(
+                        onOpenProductFlow = {
+                            startActivity(Intent(this@WelcomeActivity, ProductActivity::class.java))
+                        },
+                        onOpenProductFlowByAppLink = {
+                            val appLinkIntent = Intent(Intent.ACTION_VIEW, ProductAppLink.uri).apply {
+                                setPackage(this@WelcomeActivity.packageName)
+                            }
+                            startActivity(appLinkIntent)
+                        }
+                    )
+                }
+            }
         }
     }
 }
