@@ -12,7 +12,12 @@
             app:destination="@id/productOnboardingFragment" />
         <action
             android:id="@+id/action_productDetailsFragment_to_productFragment"
-            app:destination="@id/productFragment" />
+            app:destination="@id/productFragment">
+            <argument
+                android:name="product_arg_should_mark_visit"
+                app:argType="boolean"
+                android:defaultValue="true" />
+        </action>
     </fragment>
 
     <fragment
@@ -22,7 +27,12 @@
             android:id="@+id/action_productOnboardingFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:popUpTo="@id/productOnboardingFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true">
+            <argument
+                android:name="product_arg_should_mark_visit"
+                app:argType="boolean"
+                android:defaultValue="true" />
+        </action>
     </fragment>
 
     <fragment
@@ -31,7 +41,9 @@
         <argument
             android:name="product_arg_should_mark_visit"
             app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
+        <deepLink
+            app:uri="https://lcmnavigator.example/product" />
     </fragment>
 
 </navigation>

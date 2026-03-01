@@ -1,13 +1,13 @@
 package com.example.jetpacknavigationexample.ui.welcome
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.example.jetpacknavigationexample.ProductActivity
 import com.example.jetpacknavigationexample.R
 import com.example.jetpacknavigationexample.databinding.FragmentWelcomeBinding
-import com.example.jetpacknavigationexample.navigation.ProductAppLink
 import com.example.jetpacknavigationexample.ui.common.ViewBindingFragment
 import com.example.jetpacknavigationexample.ui.common.collectLatestLifecycleFlow
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,10 +51,10 @@ class WelcomeFragment :
             }
 
             WelcomeEffect.OpenProductFlowByAppLink -> {
-                val appLinkIntent = Intent(Intent.ACTION_VIEW, ProductAppLink.uri).apply {
-                    setPackage(requireContext().packageName)
-                }
-                startActivity(appLinkIntent)
+                findNavController().navigate(
+                    R.id.action_welcomeFragment_to_productActivity,
+                    bundleOf(ProductActivity.EXTRA_OPEN_PRODUCT_APP_LINK to true)
+                )
             }
         }
     }

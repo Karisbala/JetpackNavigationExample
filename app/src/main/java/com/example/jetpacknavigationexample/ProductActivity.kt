@@ -1,7 +1,6 @@
 package com.example.jetpacknavigationexample
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,7 +8,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.example.jetpacknavigationexample.databinding.ActivityProductBinding
 import com.example.jetpacknavigationexample.navigation.ProductAppLink
-import com.example.jetpacknavigationexample.ui.product.PRODUCT_ARG_SHOULD_MARK_VISIT
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,22 +27,19 @@ class ProductActivity : AppCompatActivity() {
             insets
         }
 
-        if (savedInstanceState == null) {
-            openProductFromAppLinkIfNeeded()
+        if (savedInstanceState == null && intent.getBooleanExtra(EXTRA_OPEN_PRODUCT_APP_LINK, false)) {
+            openProductAppLinkWithinNavGraph()
         }
     }
 
-    private fun openProductFromAppLinkIfNeeded() {
-        if (!ProductAppLink.matches(intent)) {
-            return
-        }
-
+    private fun openProductAppLinkWithinNavGraph() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.productNavHostFragment) as NavHostFragment
 
-        navHostFragment.navController.navigate(
-            R.id.action_productDetailsFragment_to_productFragment,
-            bundleOf(PRODUCT_ARG_SHOULD_MARK_VISIT to false)
-        )
+        navHostFragment.navController.navigate(ProductAppLink.uri)
+    }
+
+    companion object {
+        const val EXTRA_OPEN_PRODUCT_APP_LINK = "extra_open_product_app_link"
     }
 }
